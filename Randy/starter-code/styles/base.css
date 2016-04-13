@@ -1,6 +1,8 @@
-/* TODO: Add a rule for images, so they never exceed their container's width. */
+/* Done: Add a rule for images, so they never exceed their container's width. */
 
-
+img {
+  max-width:100%;
+}
 
 body {
   line-height: 1.5;
@@ -32,7 +34,7 @@ a, a:link, a:active {
 }
 
 a:hover, a:focus {
-  color: #29506D;
+  color: green;
 }
 
 a:visited {
