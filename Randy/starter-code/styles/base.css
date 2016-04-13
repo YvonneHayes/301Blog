@@ -34,7 +34,7 @@ a, a:link, a:active {
 }
 
 a:hover, a:focus {
-  color: #29506D;
+  color: green;
 }
 
 a:visited {
