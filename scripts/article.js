@@ -61,17 +61,22 @@
       });
     }
   };
+  function wordCount(numbs) {
+    var words = numbs.split(' ');
+    return numbs.length;
+  }
 
-// TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
+
+// DONE: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
   Article.numWordsAll = function() {
     return Article.all.map(function(article) {
-      return article.body; // Grab the words from the `article` `body`.
+      return wordCount(article.body); // Grab the words from the `article` `body`.
     })
   .reduce(function(a, b) {
     return a+b;// Sum up all the values!
   });
   };
-  
+
 
 // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
   Article.allAuthors = function() {
