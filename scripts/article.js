@@ -43,7 +43,7 @@
 // This function will retrieve the data from either a local or remote source,
 // and process it, then hand off control to the View.
 
-// TODO: Refactor this function, and provide it with a parameter of a callback function
+// DONE: Refactor this function, and provide it with a parameter of a callback function
 //(for now just a placeholder, but to be referenced at call time as a view function)
 // to execute once the loading of articles is done. We do this because we might want
 // to call other view functions, and not just the initIndexPage() that we are replacing.
@@ -65,12 +65,13 @@
 // TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
   Article.numWordsAll = function() {
     return Article.all.map(function(article) {
-      return whatShouldIReturn; // Grab the words from the `article` `body`.
+      return article.body; // Grab the words from the `article` `body`.
     })
   .reduce(function(a, b) {
-    return whatShouldIReturn;// Sum up all the values!
+    return a+b;// Sum up all the values!
   });
   };
+  
 
 // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
   Article.allAuthors = function() {
