@@ -61,6 +61,7 @@
       });
     }
   };
+
   function wordCount(numbs) {
     var words = numbs.split(' ');
     return numbs.length;
@@ -80,13 +81,23 @@
 
 // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
   Article.allAuthors = function() {
+    return Article.all.map(function(article) {
+      return (article.author); // Grab the words from the `article` `body`.
+    })
+  .reduce(function(a, b) {
+    if (a.indexOf(b) < 0) {
+      a.push(b);
+    }
+    return a;
+  },[] );
+  };
+
   // Read docs on .map and .reduce! You can reference the previous
   // `map` in the numWordsAll method to get started here.
 
   // For our `reduce` -- since we are trying to return an array, we'll need to specify an accumulator type...
   // what data type should this accumulator be and where is it placed?
-    return whatShouldIReturn;
-  };
+
 
   Article.numWordsByAuthor = function() {
   // TODO: Transform each author string into an object with 2 properties: One for
