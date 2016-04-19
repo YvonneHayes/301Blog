@@ -1,4 +1,4 @@
-// TODO: Wrap the entire contents of this file in an IIFE.
+// DONE: Wrap the entire contents of this file in an IIFE.
 // Pass in to the IIFE a module, upon which objects can be attached for later access.
 
 (function(module) {
@@ -48,15 +48,16 @@
 // to execute once the loading of articles is done. We do this because we might want
 // to call other view functions, and not just the initIndexPage() that we are replacing.
 // Now, instead of calling articleView.initIndexPage(), we can simply run our callback.
-  Article.fetchAll = function() {
+
+  Article.fetchAll = function(next) {
     if (localStorage.rawData) {
       Article.loadAll(JSON.parse(localStorage.rawData));
-      articleView.initIndexPage();
+      articleView.next();
     } else {
       $.getJSON('/data/hackerIpsum.json', function(rawData) {
         Article.loadAll(rawData);
         localStorage.rawData = JSON.stringify(rawData); // Cache the json, so we don't need to request it next time.
-        articleView.initIndexPage();
+        articleView.next();
       });
     }
   };
