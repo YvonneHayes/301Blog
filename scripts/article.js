@@ -18,7 +18,7 @@
     return template(this);
   };
 
-  // TODO: Set up a DB table for articles.
+  // DONE: Set up a DB table for articles.
   Article.createTable = function(callback) {
     webDB.init();
 
@@ -31,10 +31,10 @@
     );
   };
 
-  // TODO: Use correct SQL syntax to delete all records from the articles table.
+  // DONE: Use correct SQL syntax to delete all records from the articles table.
   Article.truncateTable = function(callback) {
     webDB.execute(
-      'DELETE ...;', // <----finish the command here, inside the quotes.
+      'DELETE * FROM articles;', // <----finish the command here, inside the quotes.
       callback
     );
   };
