@@ -40,16 +40,18 @@
   };
 
 
-  // TODO: Insert an article instance into the database:
-  Article.prototype.insertRecord = function(callback) {
+  // DONE: Insert an article instance into the database:
+  Article.prototype.insertRecord = function(articleObj) {
     webDB.execute(
       [
         {
-          'sql': '...;',
-          'data': [],
+          'sql': 'INSERT INTO articles (title, category, author, authorUrl, publishedOn, body) VALUES (?, ?, ?, ?, ?, ?);',
+          'data': [articleObj.title, articleObj.category, articleObj.author, articleObj.authorUrl, articleObj.publishedOn, articleObj.body],
         }
       ],
-      callback
+      function () {
+        console.log('Success inserting record for ' + articleObj.title);
+      }
     );
   };
 
@@ -84,9 +86,7 @@
     });
   };
 
-  // TODO: Refactor this to check if the database holds any records or not. If the DB is empty,
-  // we need to retrieve the JSON and process it.
-  // If the DB has data already, we'll load up the data (sorted!), and then hand off control to the View.
+  // TODO: Refactor this to check if the database holds any records or not. If the DB is empty, we need to retrieve the JSON and process it. If the DB has data already, we'll load up the data (sorted!), and then hand off control to the View.
   Article.fetchAll = function(next) {
     webDB.execute('', function(rows) { // TODO: fill these quotes to 'select' our table.
       if (rows.length) {
