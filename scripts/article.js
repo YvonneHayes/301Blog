@@ -20,7 +20,7 @@
 
   // DONE: Set up a DB table for articles.
   Article.createTable = function(callback) {
-    webDB.init();
+    // webDB.init();
 
     webDB.execute(
       'CREATE TABLE IF NOT EXISTS articles (title TEXT, category TEXT, author TEXT, authorUrl TEXT, publishedOn DATE, body TEXT);', // what SQL command do we run here inside these quotes?
@@ -41,16 +41,16 @@
 
 
   // DONE: Insert an article instance into the database:
-  Article.prototype.insertRecord = function(articleObj) {
+  Article.prototype.insertRecord = function(callback) {
     webDB.execute(
       [
         {
           'sql': 'INSERT INTO articles (title, category, author, authorUrl, publishedOn, body) VALUES (?, ?, ?, ?, ?, ?);',
-          'data': [articleObj.title, articleObj.category, articleObj.author, articleObj.authorUrl, articleObj.publishedOn, articleObj.body],
+          'data': [this.title, this.category, this.author, this.authorUrl, this.publishedOn, this.body],
         }
       ],
       function () {
-        console.log('Success inserting record for ' + articleObj.title);
+        console.log('Success inserting record for ' + this.title);
       }
     );
   };
@@ -92,27 +92,29 @@
 
   // TODO: Refactor this to check if the database holds any records or not. If the DB is empty, we need to retrieve the JSON and process it. If the DB has data already, we'll load up the data (sorted!), and then hand off control to the View.
   Article.fetchAll = function(next) {
-    webDB.execute('articles', function(rows) { // DONE: fill these quotes to 'select' our table.
+    webDB.execute('SELECT * FROM articles', function(rows) { // DONE: fill these quotes to 'select' our table.
       if (rows.length) {
         // DONE: Now, 1st - instanitate those rows with the .loadAll function,
         Article.loadAll(rows);
         // and 2nd - pass control to the view by calling whichever function argument was passed in to fetchAll.
-        articleView.initIndexPage();
+        next();
 
       } else {
         $.getJSON('/data/hackerIpsum.json', function(rawData) {
           // Cache the json, so we don't need to request it next time:
           rawData.forEach(function(item) {
             var article = new Article(item); // Instantiate an article based on item from JSON
-            // TODO: Cache the newly-instantiated article in the DB: (what can we call on each 'article'?)
-            Article.insertRecord(article);
+            // DONE: Cache the newly-instantiated article in the DB: (what can we call on each 'article'?)
+            article.insertRecord(article);
 
 
           });
           // Now get ALL the records out the DB, with their database IDs:
-          webDB.execute('', function(rows) { // TODO: select our now full table
-            // TODO: Now, 1st - instanitate those rows with the .loadAll function,
+          webDB.execute('SELECT * FROM articles', function(rows) { // DONE: select our now full table
+            // DONE: Now, 1st - instanitate those rows with the .loadAll function,
             // and 2nd - pass control to the view by calling whichever function argument was passed in to fetchAll.
+            Article.loadAll(rows);
+            next();
 
           });
         });
