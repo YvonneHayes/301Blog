@@ -1,5 +1,3 @@
-// DONE: Wrap the entire contents of this file in an IIFE.
-// Pass in to the IIFE a module, upon which objects can be attached for later access.
 
 (function(module) {
 
@@ -31,25 +29,13 @@
       return (new Date(b.publishedOn)) - (new Date(a.publishedOn));
     });
 
-  // DONE: Refactor this forEach code, by using a `.map` call instead, since what we are
-  // trying to accomplish is the transformation of one colleciton into another.
 
-  // rawData.forEach(function(ele) {
-  //   Article.all.push(new Article(ele));
-  // })
     Article.all = rawData.map(function(ele) {
       return new Article(ele);
     });
   };
 
-// This function will retrieve the data from either a local or remote source,
-// and process it, then hand off control to the View.
 
-// DONE: Refactor this function, and provide it with a parameter of a callback function
-//(for now just a placeholder, but to be referenced at call time as a view function)
-// to execute once the loading of articles is done. We do this because we might want
-// to call other view functions, and not just the initIndexPage() that we are replacing.
-// Now, instead of calling articleView.initIndexPage(), we can simply run our callback.
 
   Article.fetchAll = function(next) {
     if (localStorage.rawData) {
@@ -70,13 +56,12 @@
   }
 
 
-// DONE: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
   Article.numWordsAll = function() {
     return Article.all.map(function(article) {
-      return wordCount(article.body); // Grab the words from the `article` `body`.
+      return wordCount(article.body);
     })
   .reduce(function(a, b) {
-    return a+b;// Sum up all the values!
+    return a+b;
   });
   };
 
