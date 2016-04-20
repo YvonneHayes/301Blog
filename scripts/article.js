@@ -1,7 +1,6 @@
 (function(module) {
   function Article (opts) {
-    // DONE: Convert property assignment to Functional Programming style. Now, ALL properties
-    // of `opts` will be assigned as properies of the newly created article object.
+    // DONE: Convert property assignment to Functional Programming style. Now, ALL properties of `opts` will be assigned as properies of the newly created article object.
     Object.keys(opts).forEach(function(e, index, keys) {
       this[e] = opts[e];
     },this);
@@ -21,8 +20,10 @@
 
   // TODO: Set up a DB table for articles.
   Article.createTable = function(callback) {
+    webDB.init();
+
     webDB.execute(
-      '...', // what SQL command do we run here inside these quotes?
+      'CREATE TABLE IF NOT EXISTS articles (title TEXT, category TEXT, author TEXT, authorUrl TEXT, publishedOn DATE, body TEXT);', // what SQL command do we run here inside these quotes?
       function(result) {
         console.log('Successfully set up the articles table.', result);
         if (callback) callback();
