@@ -73,10 +73,12 @@
     webDB.execute(
       [
         {
-          /* ... */
+          'sql' : 'UPDATE articles SET author = "Yvonne" WHERE author = "%Card%";'
         }
       ],
-      callback
+      function() {
+        console.log('Record Updated.');
+      }
     );
   };
 
