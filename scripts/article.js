@@ -65,10 +65,11 @@
       ],
       function () {
         console.log('Record deleted');
+      }
     );
   };
 
-  // TODO: Update an article instance, overwriting it's properties into the corresponding record in the database:
+  // DONE: Update an article instance, overwriting it's properties into the corresponding record in the database:
   Article.prototype.updateRecord = function(callback) {
     webDB.execute(
       [
@@ -91,10 +92,12 @@
 
   // TODO: Refactor this to check if the database holds any records or not. If the DB is empty, we need to retrieve the JSON and process it. If the DB has data already, we'll load up the data (sorted!), and then hand off control to the View.
   Article.fetchAll = function(next) {
-    webDB.execute('', function(rows) { // TODO: fill these quotes to 'select' our table.
+    webDB.execute('articles', function(rows) { // DONE: fill these quotes to 'select' our table.
       if (rows.length) {
-        // TODO: Now, 1st - instanitate those rows with the .loadAll function,
+        // DONE: Now, 1st - instanitate those rows with the .loadAll function,
+        Article.loadAll(rows);
         // and 2nd - pass control to the view by calling whichever function argument was passed in to fetchAll.
+        articleView.initIndexPage();
 
       } else {
         $.getJSON('/data/hackerIpsum.json', function(rawData) {
@@ -102,6 +105,8 @@
           rawData.forEach(function(item) {
             var article = new Article(item); // Instantiate an article based on item from JSON
             // TODO: Cache the newly-instantiated article in the DB: (what can we call on each 'article'?)
+            Article.insertRecord(article);
+
 
           });
           // Now get ALL the records out the DB, with their database IDs:
