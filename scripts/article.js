@@ -1,7 +1,7 @@
 // DONE: Wrap the entire contents of this file in an IIFE.
 // Pass in to the IIFE a module, upon which objects can be attached for later access.
 
-// (function(module) {
+(function(module) {
 
   function Article (opts) {
     this.author = opts.author;
@@ -13,6 +13,8 @@
   }
 
   Article.all = [];
+
+  module.Article = Article; //making Article viewable outside the IIFE
 
   Article.prototype.toHtml = function() {
     var template = Handlebars.compile($('#article-template').text());
@@ -119,4 +121,4 @@
     });
   };
 
-// })(window);
+})(window);
