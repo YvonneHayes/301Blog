@@ -1,76 +1,126 @@
-// Configure a view object, to hold all our functions for dynamic updates and article-related event handlers.
-var articleView = {};
+(function(module) {
 
-articleView.populateFilters = function() {
-  $('article').each(function() {
-    if (!$(this).hasClass('template')) {
-      // DONE: We need to take every author name from the page, and make it an option in the Author filter.
-      //       To do so, Build an `option` DOM element that we can append to the author select box.
-      //       Start by grabbing the author's name from `this` article element, and then use that bit of
-      //       text to create the option tag (in a variable named `optionTag`),
-      //       that we can append to the #author-filter select element.
-      //       YAY, DOM manipulation!
-      var val = $(this).find('address a').text();
-      var optionTag = '<option value="' + val + '">' + val + '</option>';
-      $('#author-filter').append(optionTag);
+  // Configure a view object, to hold all our functions for dynamic updates and article-related event handlers.
+  var articleView = {};
 
-      // DONE: Similar to the above, but...
-      //       Avoid duplicates! We don't want to append the category name if the select
-      //       already has this category as an option!
-      val = $(this).attr('data-category');
-      optionTag = '<option value="' + val + '">' + val + '</option>';
-      if ($('#category-filter option[value="' + val + '"]').length === 0) {
-        $('#category-filter').append(optionTag);
+  articleView.populateFilters = function() {
+    $('article').each(function() {
+      if (!$(this).hasClass('template')) {
+        var val = $(this).find('address a').text();
+        var optionTag = '<option value="' + val + '">' + val + '</option>';
+        $('#author-filter').append(optionTag);
+
+        val = $(this).attr('data-category');
+        optionTag = '<option value="' + val + '">' + val + '</option>';
+        if ($('#category-filter option[value="' + val + '"]').length === 0) {
+          $('#category-filter').append(optionTag);
+        }
       }
-    }
-  });
-};
+    });
+  };
 
-articleView.handleAuthorFilter = function() {
-  $('#author-filter').on('change', function() {
-    if ($(this).val()) {
-      // TODO: If the select box was changed to an option that has a value, we need to hide all the articles,
-      //       and then show just the ones that match for the author that was selected.
-      //       Use an "attribute selector" to find those articles, and fade them in for the reader.
+  articleView.handleAuthorFilter = function() {
+    $('#author-filter').on('change', function() {
+      if ($(this).val()) {
+        $('article').hide();
+        $('article[data-author="' + $(this).val() + '"]').fadeIn();
+      } else {
+        $('article').fadeIn();
+        $('article.template').hide();
+      }
+      $('#category-filter').val('');
+    });
+  };
 
-    } else {
-      // TODO: If the select box was changed to an option that is blank, we should
-      //       show all the articles, except the one article we are using as a template.
+  articleView.handleCategoryFilter = function() {
+    $('#category-filter').on('change', function() {
+      if ($(this).val()) {
+        $('article').hide();
+        $('article[data-category="' + $(this).val() + '"]').fadeIn();
+      } else {
+        $('article').fadeIn();
+        $('article.template').hide();
+      }
+      $('#author-filter').val('');
+    });
+  };
 
-    }
-    $('#category-filter').val('');
-  });
-};
+  articleView.handleMainNav = function() {
+    $('.main-nav').on('click', '.tab', function(e) {
+      $('.tab-content').hide();
+      $('#' + $(this).data('content')).fadeIn();
+    });
 
-articleView.handleCategoryFilter = function() {
-  // TODO: Just like we do for #author-filter above, we should handle change events on the #category-filter element.
-  //       When an option with a value is selected, hide all the articles, then reveal the matches.
-  //       When the blank (default) option is selected, show all the articles, except for the template.
-  //       Be sure to reset the #author-filter while you are at it!
+    $('.main-nav .tab:first').click();
+  };
 
-};
+  articleView.setTeasers = function() {
+    $('.article-body *:nth-of-type(n+2)').hide();
 
-articleView.handleMainNav = function() {
-  // TODO: Add an event handler to .main-nav element that will power the Tabs feature.
-  //       Clicking any .tab element should hide all the .tab-content sections, and then reveal the
-  //       single .tab-content section that is associated with the clicked .tab element.
-  //       So: You need to dynamically build a selector string with the correct ID, based on the
-  //       data available to you on the .tab element that was clicked.
-  $('.main-nav').on(/* CODE GOES HERE */);
+    $('#articles').on('click', 'a.read-on', function(e) {
+      e.preventDefault();
+      $(this).parent().find('*').fadeIn();
+      $(this).hide();
+    });
+  };
 
-  $('.main-nav .tab:first').click(); // Let's now trigger a click on the first .tab element, to set up the page.
-};
+  articleView.initNewArticlePage = function() {
+    $('.tab-content').show();
+    $('#export-field').hide();
+    $('#article-json').on('focus', function(){
+      this.select();
+    });
 
-articleView.setTeasers = function() {
-  $('.article-body *:nth-of-type(n+2)').hide(); // Hide elements beyond the first 2 in any artcile body.
+    $('#new-form').on('change', 'input, textarea', articleView.create);
+  };
 
-  // TODO: Add an event handler to reveal all the hidden elements,
-  //       when the .read-on link is clicked. You can go ahead and hide the
-  //       "Read On" link once it has been clicked. Be sure to prevent the default link-click action!
-  //       Ideally, we'd attach this as just 1 event handler on the #articles section, and let it
-  //       process any .read-on clicks that happen within child nodes.
+  articleView.create = function() {
+    var article;
+    $('#articles').empty();
 
-};
+    // Instantiate an article based on what's in the form fields:
+    article = new Article({
+      title: $('#article-title').val(),
+      author: $('#article-author').val(),
+      authorUrl: $('#article-author-url').val(),
+      category: $('#article-category').val(),
+      body: $('#article-body').val(),
+      publishedOn: $('#article-published:checked').length ? util.today() : null
+    });
 
-// TODO: Call all of the above functions, once we are sure the DOM is ready.
-$();
+    $('#articles').append(article.toHtml());
+
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+
+    // Export the new article as JSON, so it's ready to copy/paste into blogArticles.js:
+    $('#export-field').show();
+    $('#article-json').val(JSON.stringify(article) + ',');
+  };
+
+  articleView.initIndexPage = function() {
+    Article.all.forEach(function(a){
+      $('#articles').append(a.toHtml());
+    });
+
+    articleView.populateFilters();
+    articleView.handleCategoryFilter();
+    articleView.handleAuthorFilter();
+    articleView.handleMainNav();
+    articleView.setTeasers();
+  };
+
+  articleView.initAdminPage = function() {
+    var template = Handlebars.compile($('#author-template').text());
+
+    Article.numWordsByAuthor().forEach(function(stat) {
+      $('.author-stats').append(template(stat));
+    });
+
+    $('#blog-stats .articles').text(Article.all.length);
+    $('#blog-stats .words').text(Article.numWordsAll());
+  };
+
+  module.articleView = articleView;
+})(window);
