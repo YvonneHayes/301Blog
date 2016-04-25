@@ -6,13 +6,15 @@
 
   routes.setRouteMappings = function() {
     page.base('/');
-    console.log('calling route mappings');
+
     page('/', articlesController.index);
     page('about', aboutController.index);
 
     // DONE: What function do we call to activate page.js? Fire it off now, to execute
     page();
   };
+
+  routes.setRouteMappings();
 
   module.routes = routes; //making it global
 
