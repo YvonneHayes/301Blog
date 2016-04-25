@@ -6,7 +6,7 @@
 
   routes.setRouteMappings = function() {
     page.base('/');
-
+    console.log('calling route mappings');
     page('/', articlesController.index);
     page('about', aboutController.index);
 
