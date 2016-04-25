@@ -1,6 +1,5 @@
 (function(module) {
   function Article (opts) {
-  
     Object.keys(opts).forEach(function(e, index, keys) {
       this[e] = opts[e];
     },this);
@@ -18,12 +17,16 @@
     return template(this);
   };
 
-
   Article.createTable = function(callback) {
-
-
     webDB.execute(
-      'CREATE TABLE IF NOT EXISTS articles (title TEXT, category TEXT, author TEXT, authorUrl TEXT, publishedOn DATE, body TEXT);',
+      'CREATE TABLE IF NOT EXISTS articles (' +
+        'id INTEGER PRIMARY KEY, ' +
+        'title VARCHAR(255) NOT NULL, ' +
+        'author VARCHAR(255) NOT NULL, ' +
+        'authorUrl VARCHAR (255), ' +
+        'category VARCHAR(20), ' +
+        'publishedOn DATETIME, ' +
+        'body TEXT NOT NULL);',
       function(result) {
         console.log('Successfully set up the articles table.', result);
         if (callback) callback();
@@ -31,58 +34,48 @@
     );
   };
 
-
   Article.truncateTable = function(callback) {
     webDB.execute(
-      'DELETE * FROM articles;',
+      'DELETE FROM articles;',
       callback
     );
   };
-
-
 
   Article.prototype.insertRecord = function(callback) {
     webDB.execute(
       [
         {
-          'sql': 'INSERT INTO articles (title, category, author, authorUrl, publishedOn, body) VALUES (?, ?, ?, ?, ?, ?);',
-          'data': [this.title, this.category, this.author, this.authorUrl, this.publishedOn, this.body],
+          'sql': 'INSERT INTO articles (title, author, authorUrl, category, publishedOn, body) VALUES (?, ?, ?, ?, ?, ?);',
+          'data': [this.title, this.author, this.authorUrl, this.category, this.publishedOn, this.body],
         }
       ],
-      function () {
-        console.log('Success inserting record for ' + this.title);
-      }
+      callback
     );
   };
-
 
   Article.prototype.deleteRecord = function(callback) {
     webDB.execute(
       [
         {
-          'sql' : 'DELETE FROM articles WHERE id = 1;'
+          'sql': 'DELETE FROM articles WHERE id = ?;',
+          'data': [this.id]
         }
       ],
-      function () {
-        console.log('Record deleted');
-      }
+      callback
     );
   };
-
 
   Article.prototype.updateRecord = function(callback) {
     webDB.execute(
       [
         {
-          'sql' : 'UPDATE articles SET author = "Yvonne" WHERE author = "%Card%";'
+          'sql': 'UPDATE articles SET title = ?, author = ?, authorUrl = ?, category = ?, publishedOn = ?, body = ? WHERE id = ?;',
+          'data': [this.title, this.author, this.authorUrl, this.category, this.publishedOn, this.body, this.id]
         }
       ],
-      function() {
-        console.log('Record Updated.');
-      }
+      callback
     );
   };
-
 
   Article.loadAll = function(rows) {
     Article.all = rows.map(function(ele) {
@@ -90,30 +83,21 @@
     });
   };
 
-
   Article.fetchAll = function(next) {
-    webDB.execute('SELECT * FROM articles', function(rows) {
+    webDB.execute('SELECT * FROM articles ORDER BY publishedOn DESC', function(rows) {
       if (rows.length) {
-
         Article.loadAll(rows);
-
         next();
-
       } else {
         $.getJSON('/data/hackerIpsum.json', function(rawData) {
-
+          // Cache the json, so we don't need to request it next time:
           rawData.forEach(function(item) {
-            var article = new Article(item);
-
-            article.insertRecord(article);
-
-
+            var article = new Article(item); // Instantiate an article based on item from JSON
+            article.insertRecord(); // Cache the article in DB
           });
-
           webDB.execute('SELECT * FROM articles', function(rows) {
             Article.loadAll(rows);
             next();
-
           });
         });
       }
@@ -161,7 +145,7 @@
   Article.stats = function() {
     return {
       numArticles: Article.all.length,
-      numWords: Article.numwords(),
+      numWords: Article.numwordsAll(),
       Authors: Article.allAuthors(),
     };
   };
