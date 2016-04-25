@@ -6,6 +6,8 @@
 
     page('/', articlesController.index);
     page('about', aboutController.index);
+    page('admin', adminController.index);
+    page('new', newArticleController.index);
 
     page();
   };

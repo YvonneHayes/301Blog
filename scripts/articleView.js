@@ -70,7 +70,7 @@
 
   articleView.create = function() {
     var article;
-    $('#articles').empty();
+    $('#new-article-text').empty();
 
     // Instantiate an article based on what's in the form fields:
     article = new Article({
@@ -82,7 +82,7 @@
       publishedOn: $('#article-published:checked').length ? util.today() : null
     });
 
-    $('#articles').append(article.toHtml());
+    $('#new-article-text').append(article.toHtml());
 
     $('pre code').each(function(i, block) {
       hljs.highlightBlock(block);
