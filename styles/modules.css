@@ -1,13 +1,30 @@
-/* TODO: Give the site header a nice background color, from your selected color scheme. */
-
 .site-header {
-  padding: .1em;
+  background: #FFEAAA;
+}
+
+.heading-group-h1 {
+  float: left;
+  padding: 0 0 .2em 1em;
+}
+
+.icon-menu {
+  font-size: 3em;
+  float: right;
 }
 
 .main-nav {
+  padding: 0.1em;
+}
+
+.main-nav ul {
+  display: none;
   padding: 0;
   list-style: none;
   clear: both;
+}
+
+.main-nav:hover ul {
+  display: block;
 }
 
 .main-nav li {
@@ -17,15 +34,9 @@
   border-bottom: 1px solid #ccc;
 }
 
-/* TODO: Style the filters so they look good on small screens:
-    Use the full width, and remove the list bullet. */
-
 #filters {
   padding: 0;
-}
-
-#filters select {
-
+  list-style: none;
 }
 
 .template {
@@ -41,10 +52,36 @@
   text-decoration: none;
 }
 
-.pull-left {
-  float: left;
+#article-export label {
+  font-size: .8em;
+  font-style: italic;
+  color: #ccc;
 }
 
-.pull-right {
-  float: right;
+li.admin-function {
+  display: none !important;
+}
+
+@media only screen and (min-width: 640px) {
+  .icon-menu {
+    display: none;
+  }
+
+  .main-nav {
+    padding: .2em .2em .2em 2em;
+  }
+
+  .main-nav ul {
+    display: block;
+  }
+
+  .main-nav ul li {
+    display: inline;
+    border-bottom: none;
+  }
+
+  .main-nav ul li:hover a {
+    color: #29506D;
+  }
+
 }

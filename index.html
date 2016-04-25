@@ -3,29 +3,51 @@
   <head>
     <meta charset="UTF-8">
     <title>Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="vendor/styles/normalize.css">
     <link rel="stylesheet" href="styles/icons.css">
     <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/layout.css">
     <link rel="stylesheet" href="styles/modules.css">
+    <script id="author-template" type="text/x-handlebars-template">
+      <li><strong>{{name}}</strong>: {{numWords}} words written</li>
+    </script>
+    <script id="article-template" type="text/x-handlebars-template">
+      <article class="clearfix" data-author="{{author}}" data-category="{{category}}">
+        <header>
+          <h1>{{title}}</h1>
+          <div class="byline">
+            By <address><a href="{{authorUrl}}">{{author}}</a></address>
+            {{publishStatus}}
+          </div>
+        </header>
+        <section class="article-body">{{{body}}}</section>
+        <a href="#" class="read-on">Read on &rarr;</a>
+      </article>
+    </script>
   </head>
   <body>
-    <header class="site-header">
-      <h1>
-        Kilovolt Blog!
-      </h1>
-      <p>The shocking power of static pages</p>
+    <header class="site-header clearfix">
+      <section class="heading-group-h1">
+        <h1>
+          Kilovolt Blog!
+        </h1>
+        <h2>The shocking power of static pages</h2>
+      </section>
+      <nav class="main-nav">
+        <div class="icon-menu"></div>
+        <ul>
+          <li class="tab" data-content="articles"><a href="/" class="icon-home"> Home</a></li>
+          <li class="tab" data-content="about"><a href="/about" class="icon-address-book"> About</a></li>
+          <li class="tab" data-content="about"><a href="/admin" class="icon-address-book"> Admin</a></li>
+          <li class="tab admin-function"><a href="/new">New Article</a></li>
+          <li><a href="http://twitter.com/brookr" target="_blank" class="icon-twitter3"> Twitter</a></li>
+          <li><a href="http://github.com/brookr" target="_blank" class="icon-github"> GitHub</a></li>
+        </ul>
+      </nav>
     </header>
-    <nav class="main-nav">
-      <ul>
-        <!-- TODO: Use one of the icons from the available set for each of these nav items... -->
-        <li class="tab" data-content="articles"><a href="#"> Home</a></li>
-        <li class="tab" data-content="about"><a href="#"> About</a></li>
-        <li><a href="http://twitter.com/brookr" target="_blank"> Twitter</a></li>
-        <li><a href="http://github.com/brookr" target="_blank"> GitHub</a></li>
-      </ul>
-    </nav>
     <main>
-      <section id="articles" class="tab-content">
+      <section id="articles">
         <div>
           <ul id="filters">
             <li>
@@ -40,19 +62,8 @@
             </li>
           </ul>
         </div>
-        <article class="template template" data-category="cat">
-          <header>
-            <h1>Title</h1>
-            <div class="byline">
-              By <address><a href="">Author Name</a></address>
-              published <time pubdate datetime="2000-01-01">Publish Time</time>
-            </div>
-          </header>
-          <section class="article-body"></section>
-          <a href="#" class="read-on">Read on &rarr;</a>
-        </article>
       </section>
-      <section id="about" class="tab-content">
+      <section id="about">
         <header>
           Welcome to my Blog
         </header>
@@ -65,14 +76,68 @@
           </ul>
         </section>
       </section>
+      <section id="admin">
+        <h1>Blog Stats</h1>
+        <section id="blog-stats">
+          <dt>Total articles:</dt> <dd class="articles"></dd>
+          <dt>Total words:</dt> <dd class="words"></dd>
+          <h2>Author Stats</h2>
+          <p><em>Details on who is writing, and how much writing they are doing...</em></p>
+          <ul class="author-stats">
+          </ul>
+        </section>
+
+      </section>
+      <section id="new-article">
+        <section id="write" class="tab-content">
+          <h1>New Article</h1>
+          <form action="#" id="new-form">
+            <label>
+              <input type="text" id="article-title" placeholder="Article title" required>
+            </label>
+            <textarea id="article-body" rows="8" cols="40" required></textarea>
+            <label>
+              <input type="text" id="article-author" placeholder="Author Name" required>
+            </label>
+            <label>
+              <input type="text" id="article-author-url" placeholder="Author's URL" required>
+            </label>
+            <label>
+              <input type="text" id="article-category" placeholder="Category" required>
+            </label>
+            <label>
+              <input type="checkbox" id="article-published"> Published
+            </label>
+          </form>
+        </section>
+        <section id="new-article-text">
+
+        </section>
+        <section id="article-export">
+          <label id="export-field" for="article-json" class="pull-right">
+            <input type="text" readonly id="article-json">
+            When finalized, copy the above JSON, and paste into blogArticles.js
+          </label>
+        </section>
+      </section>
     </main>
     <footer>
       &copy; 2015 Code Fellows | Static Blog | Happy Ipsum!
     </footer>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="scripts/blogArticles.js"></script>
-    <script src="scripts/article.js"></script>
-    <!-- TODO: Link up the new js file that will manage the article "View". -->
+    <script src="/vendor/scripts/jquery-2.1.4.js"></script>
+    <script src="/vendor/scripts/handlebars.js"></script>
+    <script src="/vendor/scripts/marked.js"></script>
+    <script src="vendor/scripts/highlight.pack.js"></script>
+    <script src="/vendor/scripts/html5sql.js"></script>
+    <script src="/vendor/scripts/page.js"></script>
+    <script src="/scripts/webdb.js"></script>
+    <script src="/scripts/article.js"></script>
+    <script src="/scripts/articleView.js"></script>
+    <script src="/scripts/articleController.js"></script>
+    <script src="/scripts/aboutController.js"></script>
+    <script src="/scripts/adminController.js"></script>
+    <script src="/scripts/newArticleController.js"></script>
+    <script src="/scripts/routes.js"></script>
   </body>
 </html>
