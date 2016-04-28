@@ -11,7 +11,7 @@
   // COMMENT: What does this method do?  What is it's execution path?
 
   //loadById gets executed when URL contains /aricle/:id.
-  // page.js from routes.js activates and calls articlesControlle which defines the function articlesData. FindWhere runs a SQL query by id and calls articleData with that returned id. 
+  //routes.js calls page.js library and activates and calls articlesController which defines the function articlesData. FindWhere runs a SQL query by id and calls articleData with that returned id. 
 
   articlesController.loadById = function(ctx, next) {
     var articleData = function(article) {
