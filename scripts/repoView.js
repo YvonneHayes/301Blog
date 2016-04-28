@@ -8,14 +8,16 @@
     $about.show().siblings().hide();
   };
 
-  // Set up a new compile method to help render our repos.
-  var render = Handlebars.compile($('#repo-template').text());
+  var render = function(repo) {
+    return $('<li>')
+      .html('<a href="' + repo.html_url + '">' + repo.full_name + '</a>');
+  };
 
   repoView.index = function() {
     ui();
 
     $('#about ul').append(
-      repos.with('name').map(render)
+      repos.with('forks_count').map(render)
     );
   };
 

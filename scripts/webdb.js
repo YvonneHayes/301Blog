@@ -45,7 +45,7 @@
   };
 
   module.webDB = webDB;
-})(window)
+})(window);
 
 // We can go ahead and set up the basic db connection now:
 webDB.init(true);
