@@ -11,15 +11,18 @@ page('/',
 page('/about', aboutController.index);
 
 
-// In line 23 in index.html a link is created. This link dynamically inserts the id of the article that the user selects. So this adds / + articleId to the end of the URL. The click first leads to articlesController.loadById on the articlesController.js page. That method creates a function called articleData but does not call it. Article.FindWhere is called first on line 23 of the same file which takes the id of the selected article and queries the aricle data and calls the article data function. Then articleData assigns the selected article to the ctx.articles variable and runs the articlesController.indes which is right here on line 17 and was defined in articleController.js on line 6. There articleView.index appends the article to the #articles tag renders the handlebars template with the full article. In sum the user clicks on the button and the rest of the aricle is shown. 
+// In line 23 in index.html a link is created. This link dynamically inserts the id of the article that the user selects. So this adds / + articleId to the end of the URL. The click first leads to articlesController.loadById on the articlesController.js page. That method creates a function called articleData but does not call it. Article.FindWhere is called first on line 23 of the same file which takes the id of the selected article and queries the aricle data and calls the article data function. Then articleData assigns the selected article to the ctx.articles variable and runs the articlesController.indes which is right here on line 17 and was defined in articleController.js on line 6. There articleView.index appends the article to the #articles tag renders the handlebars template with the full article. In sum the user clicks on the button and the rest of the aricle is shown.
 page('/article/:id',
   articlesController.loadById,
   articlesController.index);
 
 // Redirect home if the default filter option is selected:
+
+// When user filters to default options for either category or author the url removes anything after the first / and the user is shown the regular home page again.
 page('/category', '/');
 page('/author', '/');
 
+// In articleView.js line 44 in the event handler on either one of the filters it creates a string that is the user's selection. This string is passed to page.js which finds that string in lines 26 or 30 of this page. Then page will call the matching function either line 27 or 31.
 page('/author/:authorName',
   articlesController.loadByAuthor,
   articlesController.index);
@@ -28,4 +31,5 @@ page('/category/:categoryName',
   articlesController.loadByCategory,
   articlesController.index);
 
+// This calls page throughout the whole application.
 page();
