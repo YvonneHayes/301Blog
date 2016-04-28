@@ -91,8 +91,8 @@
     });
   };
 
-  Article.findWhere = function(field, value, callback) {
-    webDB.execute(
+  Article.findWhere = function(field, value, callback) { //Where is a SQL condition not location!
+    webDB.execute( //found on webDB.js accepts SQL and a callback
       [
         {
           sql: 'SELECT * FROM articles WHERE ' + field + ' = ?;',
