@@ -18,11 +18,11 @@ page('/article/:id',
 
 // Redirect home if the default filter option is selected:
 
-// When user filters to default options for either category or author the url removes anything after the first / and the user is shown the regular home page again.
+// When user filters to default options for either category or author the url removes anything after the first / and the user is rerouted to the regular main page (/) again. So just as with the first page call above the user will be shown all articles.
 page('/category', '/');
 page('/author', '/');
 
-// In articleView.js line 44 in the event handler on either one of the filters it creates a string that is the user's selection. This string is passed to page.js which finds that string in lines 26 or 30 of this page. Then page will call the matching function either line 27 or 31.
+// In articleView.js line 44 in the event handler on either one of the filters it creates a string that is the user's selection. This string is passed to page.js which finds that string in lines 26 or 30 of this page. Then page will call the matching function either line 27 or 31. ArticlesController.index then shows all the slected articles on the page (either selected author, or selected category).
 page('/author/:authorName',
   articlesController.loadByAuthor,
   articlesController.index);
@@ -31,5 +31,5 @@ page('/category/:categoryName',
   articlesController.loadByCategory,
   articlesController.index);
 
-// This calls page throughout the whole application.
+// This calls page throughout the whole application. It activates all of the above mappings.
 page();
